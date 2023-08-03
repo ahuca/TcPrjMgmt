@@ -30,7 +30,7 @@ CompanyName = 'Unknown'
 Copyright = '(c) Giang Nguyen. All rights reserved.'
 
 # Description of the functionality provided by this module
-# Description = ''
+Description = 'Utilities for managing TwinCAT solutions and projects. Including PLC project exporting, and library installation and uninstallation.'
 
 # Minimum version of the PowerShell engine required by this module
 # PowerShellVersion = ''
