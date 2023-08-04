@@ -1,4 +1,4 @@
-Import-Module "$PSScriptRoot\..\src\TcPrjMgmt"
+. "$PSScriptRoot\Setup-TcPrjMgmtTest.ps1"
 
 Describe 'Export-TcProject' {
     BeforeAll {
