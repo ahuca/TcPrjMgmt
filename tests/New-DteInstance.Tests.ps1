@@ -1,4 +1,4 @@
-Import-Module "$PSScriptRoot\..\TcPrjMgmt"
+Import-Module "$PSScriptRoot\..\src\TcPrjMgmt"
 
 Describe 'New-DteInstance' {
     BeforeAll {

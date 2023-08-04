@@ -1,8 +1,8 @@
-Import-Module "$PSScriptRoot\..\TcPrjMgmt"
+Import-Module "$PSScriptRoot\..\src\TcPrjMgmt"
 
 Describe 'Export-TcProject' {
     BeforeAll {
-        $testSolution = ".\TestXaeProject\TestXaeProject.sln"
+        $testSolution = "$PSScriptRoot\TestXaeProject\TestXaeProject.sln"
         $testPlcProject = "TestPlcProject"
         Start-MessageFilter
         $dte = New-DteInstance -ForceProgId "TcXaeShell.DTE.15.0"

@@ -12,7 +12,7 @@
 RootModule = 'TcPrjMgmt.psm1'
 
 # Version number of this module.
-ModuleVersion = '0.1.1'
+ModuleVersion = '0.1.2'
 
 # Supported PSEditions
 # CompatiblePSEditions = @()
@@ -30,7 +30,7 @@ CompanyName = 'Unknown'
 Copyright = '(c) Giang Nguyen. All rights reserved.'
 
 # Description of the functionality provided by this module
-Description = 'Utilities for managing TwinCAT solutions and projects. Including PLC project exporting, and library installation and uninstallation.'
+Description = 'Utilities for managing TwinCAT solutions and projects. Including PLC project exporting, and library installation and uninstallation. NOTE: This module requires >= TwinCAT 3.1.4024.10 (XAR Runtime or Full) (local installation)'
 
 # Minimum version of the PowerShell engine required by this module
 # PowerShellVersion = ''
@@ -87,7 +87,7 @@ AliasesToExport = @()
 # ModuleList = @()
 
 # List of all files packaged with this module
-FileList = @('Dummy.tpzip','LICENSE','README.md','TcPrjMgmt.psd1','TcPrjMgmt.psm1')
+# FileList = @()
 
 # Private data to pass to the module specified in RootModule/ModuleToProcess. This may also contain a PSData hashtable with additional module metadata used by PowerShell.
 PrivateData = @{
@@ -102,8 +102,6 @@ PrivateData = @{
 
         # A URL to the main website for this project.
         ProjectUri = 'https://github.com/ahuca/TcPrjMgmt/tree/main'
-
-        Dependencies = '>= TwinCAT 3.1.4024.10 (XAR Runtime or Full) (local installation)'
 
         # A URL to an icon representing this module.
         # IconUri = ''
