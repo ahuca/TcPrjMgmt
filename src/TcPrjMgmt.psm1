@@ -249,7 +249,7 @@ function Export-TcProject {
             else {
                 $fullName = "$Path\$ProjectName.library"
             }
-        
+            
             $plc.SaveAsLibrary($fullName, $InstallUponSave)
         }
 
@@ -274,7 +274,7 @@ function Export-TcProject {
         Write-Host "$ProjectName exported to $fullName"
     }
 
-    $sln.Close()
+    $DteInstace.Solution.Close($false)
 }
 
 function New-DummyTwincatSolution {
@@ -287,7 +287,7 @@ function New-DummyTwincatSolution {
 
     Write-Verbose "Creating a new TwinCAT solution in $Path ..."
     
-    $tcProjectTemplatePath = "C:\TwinCAT\3.1\Components\Base\PrjTemplate\TwinCAT Project.tsproj"
+    $tcProjectTemplatePath = "$Env:TWINCAT3DIR\Components\Base\PrjTemplate\TwinCAT Project.tsproj"
     
     if (!(Test-Path $tcProjectTemplatePath -PathType Leaf)) {
         Write-Error "Could not find TwinCAT project template at $tcProjectTemplatePath"
@@ -316,16 +316,16 @@ function New-DummyTwincatSolution {
 function Install-TcLibrary {
     [CmdletBinding()]
     param (
-        [Parameter(Mandatory = $true)]$LibPath,
         [Parameter(Mandatory = $true, ValueFromPipeline = $true)][System.__ComObject]$DteInstace,
+        [Parameter(Mandatory = $true)]$Path,
         [string]$DummyProjectPath = (Resolve-Path "$PSScriptRoot\Dummy.tpzip").ToString(),
         [string]$TmpPath = "$Env:TEMP\$([Guid]::NewGuid())",
         [string]$LibRepo = "System",
         [switch]$Force
     )
 
-    if (!(Test-Path $LibPath -PathType Leaf)) {
-        throw "Provided library path $LibPath does not exist"
+    if (!(Test-Path $Path -PathType Leaf)) {
+        throw "Provided library path $Path does not exist"
     }
     
     if (!(Test-Path $DummyProjectPath -PathType Leaf)) {
@@ -352,7 +352,7 @@ function Install-TcLibrary {
         throw "Failed to look up the project references"
     }
     
-    Write-Host "Installing library $LibPath to $LibRepo"
+    Write-Host "Installing library $Path to $LibRepo"
     
     if ($Force) { $forceInstall = $true }
     else { $forceInstall = $false }
@@ -360,34 +360,33 @@ function Install-TcLibrary {
     Write-Host "Forced installation set to ``$forceInstall``"
     
     try {
-        $references.InstallLibrary($LibRepo, $LibPath, $forceInstall)
+        $references.InstallLibrary($LibRepo, $Path, $forceInstall)
     }
     catch {
-        throw "Failed to install $LibPath to $LibRepo"
+        throw "Failed to install $Path to $LibRepo"
     }
 
-    Write-Host "Successfully installed $LibPath to $LibRepo"
+    Write-Host "Successfully installed $Path to $LibRepo"
 
     trap {
         Write-Error "$_"
         Write-Verbose "Cleaning up temporary directory $TmpPath ..."
-        $dte.Solution.Close($false)
+        $DteInstace.Solution.Close($false)
         Remove-Item $TmpPath -Recurse -Force
     }
 
-    Write-Error "$_"
     Write-Verbose "Cleaning up temporary directory $TmpPath ..."
-    $dte.Solution.Close($false)
+    $DteInstace.Solution.Close($false)
     Remove-Item $TmpPath -Recurse -Force
 }
 
 function Uninstall-TcLibrary {
     [CmdletBinding()]
     param (
+        [Parameter(Mandatory=$true,ValueFromPipeline=$true)][System.__ComObject]$DteInstace,
         [Parameter(Mandatory = $true)]$LibName,
         [string]$LibVersion = "*",
         [string]$Distributor = $LibName,
-        [System.__ComObject]$DteInstace,
         [string]$DummyProjectPath = (Resolve-Path "$PSScriptRoot\Dummy.tpzip").ToString(),
         [string]$TmpPath = "$Env:TEMP\$([Guid]::NewGuid())",
         [string]$LibRepo = "System"
@@ -433,12 +432,11 @@ function Uninstall-TcLibrary {
     trap {
         Write-Error "$_"
         Write-Verbose "Cleaning up temporary directory $TmpPath ..."
-        $dte.Solution.Close($false)
+        $DteInstace.Solution.Close($false)
         Remove-Item $TmpPath -Recurse -Force
     }
 
-    Write-Error "$_"
     Write-Verbose "Cleaning up temporary directory $TmpPath ..."
-    $dte.Solution.Close($false)
+    $DteInstace.Solution.Close($false)
     Remove-Item $TmpPath -Recurse -Force
 }
