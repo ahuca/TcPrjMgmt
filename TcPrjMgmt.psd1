@@ -12,7 +12,7 @@
 RootModule = 'TcPrjMgmt.psm1'
 
 # Version number of this module.
-ModuleVersion = '0.1.0'
+ModuleVersion = '0.1.1'
 
 # Supported PSEditions
 # CompatiblePSEditions = @()
@@ -87,7 +87,7 @@ AliasesToExport = @()
 # ModuleList = @()
 
 # List of all files packaged with this module
-FileList = @('.\Dummy.tpzip', '.\LICENSE', '.\README.md')
+FileList = @('Dummy.tpzip','LICENSE','README.md','TcPrjMgmt.psd1','TcPrjMgmt.psm1')
 
 # Private data to pass to the module specified in RootModule/ModuleToProcess. This may also contain a PSData hashtable with additional module metadata used by PowerShell.
 PrivateData = @{
@@ -95,7 +95,7 @@ PrivateData = @{
     PSData = @{
 
         # Tags applied to this module. These help with module discovery in online galleries.
-        Tags = @('Powershell','Management','TcPrjMgmt','ADS','Route','Beckhoff','TwinCAT', 'TwinCAT project')
+        Tags = @('Powershell','ProjectManagement','TcPrjMgmt','Beckhoff','TwinCAT')
 
         # A URL to the license for this module.
         LicenseUri = 'https://github.com/ahuca/TcPrjMgmt/blob/main/LICENSE'
