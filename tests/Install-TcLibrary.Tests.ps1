@@ -11,9 +11,9 @@ Describe 'Install-TcLibrary' {
 
         $outputPath = "$Env:TEMP\$([Guid]::NewGuid())"
         New-Item -ItemType Directory -Path $outputPath
-        $script:libraryPath = "$outputPath/$testPlcProject.library"
+        $script:libraryPath = "$outputPath\$testPlcProject.library"
 
-        $dte | Export-TcProject -Solution $testSolution -ProjectName $testPlcProject -Format Library -Path $outputPath
+        $dte | Export-TcProject -Solution $testSolution -ProjectName $testPlcProject -Format Library -OutFile $script:libraryPath
 
         $dte.Solution.Close($false)
     }

@@ -165,7 +165,7 @@ function New-DteInstance {
             $dte.MainWindow.Visible = $false
             $dte.UserControl = $false
             # Check if TwinCAT is integrated with this visual studio version
-            $ignore = $dte.GetObject("TcRemoteManager")
+            $null = $dte.GetObject("TcRemoteManager")
             $loadedProgId = $vsProgId
         }
         catch {
@@ -200,6 +200,30 @@ function Close-DteInstace {
     catch {}
 }
 
+function Resolve-OutFile {
+    [CmdletBinding()]
+    param (
+        [Parameter(Mandatory = $true, ValueFromPipeline = $true)]
+        [string]
+        $OutFile
+    )
+
+    if (Split-Path -Path $OutFile -IsAbsolute)
+    {
+        return $OutFile
+    }
+    else {
+        $parent = Split-Path -Path $OutFile
+        if (!$parent) { $parent = $PWD }
+        $leaf = Split-Path -Path $OutFile -Leaf
+        $fullPath = "$(Resolve-Path $parent)\$($leaf)"
+
+        return $fullPath
+    }
+
+}
+
+
 function Export-TcProject {
     [CmdletBinding()]
     param (
@@ -207,12 +231,11 @@ function Export-TcProject {
         [Parameter(Mandatory = $true)][string]$Solution,
         [Parameter(Mandatory = $true)][string]$ProjectName,
         [ValidateSet("Library", "PlcOpen")][string]$Format = "Library",
-        [string]$Path = $PWD,
-        [string]$FileName,
+        [Parameter(Mandatory = $true)][string]$OutFile,
         [Parameter(HelpMessage = "Only used if export format is Library")][switch]$InstallUponSave = $false,
         [Parameter(HelpMessage = "Only used if export format is PlcOpen")][string]$ExportItems = ""
     )
-    
+
     $sln = $DteInstace.Solution
 
     $Solution = Resolve-Path $Solution
@@ -232,6 +255,14 @@ function Export-TcProject {
         return
     }
 
+    try {
+        $fullPath = Resolve-OutFile $OutFile
+    }
+    catch {
+        Write-Error $_
+        $DteInstace.Solution.Close($false)
+    }
+
     $global:plc = $null
 
     Invoke-CommandWithRetry -ScriptBlock { $global:plc = $sysMan.LookupTreeItem("TIPC^$ProjectName^$ProjectName Project") } -Count 10 -Milliseconds 100
@@ -243,14 +274,7 @@ function Export-TcProject {
 
     switch ($Format) {
         "Library" {
-            if ($FileName) {
-                $fullName = "$Path\$FileName"
-            }
-            else {
-                $fullName = "$Path\$ProjectName.library"
-            }
-            
-            $plc.SaveAsLibrary($fullName, $InstallUponSave)
+            $plc.SaveAsLibrary($fullPath, $InstallUponSave)
         }
 
         "PlcOpen" {
@@ -259,19 +283,12 @@ function Export-TcProject {
                 break;
             }
 
-            if ($FileName) {
-                $fullName = "$Path\$FileName"
-            }
-            else {
-                $fullName = "$Path\$ProjectName.xml"
-            }
-        
-            $plc.PlcOpenExport($fullName, $ExportItems)
+            $plc.PlcOpenExport($fullPath, $ExportItems)
         }
     }
 
     if ($?) {
-        Write-Host "$ProjectName exported to $fullName"
+        Write-Host "$ProjectName exported to $fullPath"
     }
 
     $DteInstace.Solution.Close($false)
@@ -281,7 +298,7 @@ function New-DummyTwincatSolution {
     [CmdletBinding()]
     param (
         [Parameter(Mandatory = $true, ValueFromPipeline = $true)][System.__ComObject]$DteInstace,
-        [Parameter(Mandatory = $true)][string]$Path = "$Env:TEMP\$([Guid]::NewGuid())",
+        [string]$Path = "$Env:TEMP\$([Guid]::NewGuid())",
         [string]$DummyProjectPath = (Resolve-Path "$PSScriptRoot\Dummy.tpzip").ToString()
     )
 
@@ -336,7 +353,7 @@ function Install-TcLibrary {
         throw "No DTE instance provided, or it is null"
     }
     
-    $ignore = New-DummyTwincatSolution -DteInstace $DteInstace -Path $TmpPath -DummyProjectPath $DummyProjectPath
+    $null = New-DummyTwincatSolution -DteInstace $DteInstace -Path $TmpPath -DummyProjectPath $DummyProjectPath
     
     try {
         $systemManager = $DteInstace.Solution.Projects.Item(1).Object
@@ -383,7 +400,7 @@ function Install-TcLibrary {
 function Uninstall-TcLibrary {
     [CmdletBinding()]
     param (
-        [Parameter(Mandatory=$true,ValueFromPipeline=$true)][System.__ComObject]$DteInstace,
+        [Parameter(Mandatory = $true, ValueFromPipeline = $true)][System.__ComObject]$DteInstace,
         [Parameter(Mandatory = $true)]$LibName,
         [string]$LibVersion = "*",
         [string]$Distributor = $LibName,
@@ -402,7 +419,7 @@ function Uninstall-TcLibrary {
         throw "No DTE instance provided, or it is null"
     }
     
-    $ignore = New-DummyTwincatSolution -DteInstace $DteInstace -Path $TmpPath -DummyProjectPath $DummyProjectPath
+    $null = New-DummyTwincatSolution -DteInstace $DteInstace -Path $TmpPath -DummyProjectPath $DummyProjectPath
     
     try {
         $systemManager = $DteInstace.Solution.Projects.Item(1).Object

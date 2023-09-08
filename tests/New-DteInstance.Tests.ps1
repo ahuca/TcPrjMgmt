@@ -28,7 +28,7 @@ Describe 'New-DteInstance' {
 
     Context 'with no parameters' {
         BeforeAll {
-            $dte = New-DteInstance
+            $global:dte = New-DteInstance
         }
 
         It 'Should create TcXaeShell.DTE.15.0 by default' {

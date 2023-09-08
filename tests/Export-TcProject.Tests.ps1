@@ -2,10 +2,10 @@
 
 Describe 'Export-TcProject' {
     BeforeAll {
-        $testSolution = "$PSScriptRoot\TestXaeProject\TestXaeProject.sln"
-        $testPlcProject = "TestPlcProject"
+        $global:testSolution = "$PSScriptRoot\TestXaeProject\TestXaeProject.sln"
+        $global:testPlcProject = "TestPlcProject"
         Start-MessageFilter
-        $dte = New-DteInstance -ForceProgId "TcXaeShell.DTE.15.0"
+        $global:dte = New-DteInstance -ForceProgId "TcXaeShell.DTE.15.0"
     }
 
     Context 'as a library' {
@@ -14,7 +14,7 @@ Describe 'Export-TcProject' {
             New-Item -ItemType Directory -Path $outputPath
             $outputFile = "$outputPath/$testPlcProject.library"
 
-            $dte | Export-TcProject -Solution $testSolution -ProjectName $testPlcProject -Format Library -Path $outputPath
+            $dte | Export-TcProject -Solution $testSolution -ProjectName $testPlcProject -Format Library -OutFile $outputFile
 
             Test-Path $outputFile | Should -BeTrue
             Remove-Item -Path $outputPath -Recurse
@@ -23,7 +23,7 @@ Describe 'Export-TcProject' {
         It 'without any path. Should save to working directory' {
             $outputFile = "$PWD\$testPlcProject.library"
 
-            $dte | Export-TcProject -Solution $testSolution -ProjectName $testPlcProject -Format Library
+            $dte | Export-TcProject -Solution $testSolution -ProjectName $testPlcProject -Format Library -OutFile "$testPlcProject.library"
 
             Test-Path $outputFile | Should -BeTrue
             Remove-Item -Path $outputFile
@@ -36,7 +36,7 @@ Describe 'Export-TcProject' {
             New-Item -ItemType Directory -Path $outputPath
             $outputFile = "$outputPath/$testPlcProject.xml"
 
-            $dte | Export-TcProject -Solution $testSolution -ProjectName $testPlcProject -Format PlcOpen -ExportItems "POUs" -Path $outputPath
+            $dte | Export-TcProject -Solution $testSolution -ProjectName $testPlcProject -Format PlcOpen -ExportItems "POUs" -OutFile $outputFile
 
             Test-Path $outputFile | Should -BeTrue
             Remove-Item -Path $outputPath -Recurse
@@ -45,7 +45,7 @@ Describe 'Export-TcProject' {
         It 'without any path. Should save to working directory' {
             $outputFile = "$PWD/$testPlcProject.xml"
 
-            $dte | Export-TcProject -Solution $testSolution -ProjectName $testPlcProject -Format PlcOpen -ExportItems "POUs"
+            $dte | Export-TcProject -Solution $testSolution -ProjectName $testPlcProject -Format PlcOpen -ExportItems "POUs" -OutFile "$testPlcProject.xml"
 
             Test-Path $outputFile | Should -BeTrue
             Remove-Item -Path $outputFile
