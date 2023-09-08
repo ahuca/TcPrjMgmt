@@ -8,7 +8,7 @@ name: Create Release
 jobs:
   create-github-release:
     name: Create GitHub Release
-    runs-on: [Windows, x64]
+    runs-on: ubuntu-latest
     permissions:
       contents: write
     steps:
@@ -19,8 +19,9 @@ jobs:
           
   publish-to-psgallery:
     name: Publish to PSGallery
-    runs-on: [Windows, x64]
+    needs: create-github-release
+    runs-on: ubuntu-latest
     steps:
       - name: Publish to PSGallery
-        run: Publish-Module -Path $($GITHUB_WORKSPACE)\src\TcPrjMgmt -NuGetApiKey ${{ github.PSGALLERY_API_KEY }}
-    
+        shell: pwsh
+        run: Publish-Module -Path "$($GITHUB_WORKSPACE)\src\TcPrjMgmt" -NuGetApiKey ${{ secrets.PSGALLERY_API_KEY }}
