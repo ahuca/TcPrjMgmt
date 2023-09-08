@@ -19,6 +19,9 @@ on:
           - Minor
           - Major
 
+env:
+  MANIFEST_PATH: "${{ github.workspace }}/src/TcPrjMgmt/TcPrjMgmt.psd1"
+
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   # This workflow contains a single job called "bump-version"
@@ -46,7 +49,16 @@ jobs:
         shell: pwsh
         run: |
           Install-Module -Name BuildHelpers -RequiredVersion 2.0.9 -Force -Confirm:$false
-          Step-ModuleVersion -Path "${{ github.workspace }}/src/TcPrjMgmt/TcPrjMgmt.psd1" -By ${{ github.event.inputs.version }}
+          $oldVersion = Get-Metadata $env:MANIFEST_PATH
+          Step-ModuleVersion -Path $env:MANIFEST_PATH -By ${{ github.event.inputs.version }}
+          $newVersion = Get-Metadata $env:MANIFEST_PATH
+          git add $env:MANIFEST_PATH
+          git commit -m "Bumped version: $($oldVersion) → $($newVersion)"
 
       - name: Push latest version
-        run: git push origin main --follow-tags
+        shell: pwsh
+        run: |
+          $version = Get-Metadata $env:MANIFEST_PATH
+          git tag "v$($version)"
+          git push origin main
+          git push --tags
