@@ -125,13 +125,18 @@ function Invoke-CommandWithRetry {
         do {
             try {
                 $ScriptBlock.Invoke()
-                return
+                break
             }
             catch {
                 $failures++
                 Start-Sleep -Milliseconds $Milliseconds
             }
         } while ($failures -lt $Count)
+
+        if ($failures -eq $Count)
+        {
+            Write-Error "Maximum amount of retries ($Count) have been reached"
+        }
     }
 }
 
@@ -208,8 +213,7 @@ function Resolve-OutFile {
         $OutFile
     )
 
-    if (Split-Path -Path $OutFile -IsAbsolute)
-    {
+    if (Split-Path -Path $OutFile -IsAbsolute) {
         return $OutFile
     }
     else {
@@ -247,13 +251,23 @@ function Export-TcProject {
         return
     }
 
-    try {
+    $project = Invoke-CommandWithRetry -ScriptBlock {
         $project = $sln.Projects.Item(1)
+        if (!$project) {
+            throw
+        }
+
+        return $project
+    } -Count 10 -Milliseconds 100
+
+    $sysMan = Invoke-CommandWithRetry -ScriptBlock {
         $sysMan = $project.Object
-    }
-    catch {
-        return
-    }
+        if (!$sysMan) {
+            throw
+        }
+
+        return $sysMan
+    } -Count 10 -Milliseconds 100
 
     try {
         $fullPath = Resolve-OutFile $OutFile
@@ -263,14 +277,14 @@ function Export-TcProject {
         $DteInstace.Solution.Close($false)
     }
 
-    $global:plc = $null
+    $plc = Invoke-CommandWithRetry -ScriptBlock {
+        $result = $sysMan.LookupTreeItem("TIPC^$ProjectName^$ProjectName Project") 
+        if (!$result) {
+            throw
+        }
 
-    Invoke-CommandWithRetry -ScriptBlock { $global:plc = $sysMan.LookupTreeItem("TIPC^$ProjectName^$ProjectName Project") } -Count 10 -Milliseconds 100
-
-    if (!$global:plc) {
-        Write-Error "Could not look up project $ProjectName in solution $Solution"
-        return
-    }
+        return , $result
+    } -Count 10 -Milliseconds 100
 
     switch ($Format) {
         "Library" {
