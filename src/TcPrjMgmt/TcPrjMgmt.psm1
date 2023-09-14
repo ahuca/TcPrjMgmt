@@ -97,6 +97,8 @@ Set-Variable -Name "ProgIdList" -Scope global -Option Constant -Value @(
     "VisualStudio.DTE.12.0" # VS2013
 )
 
+$DummyProjectPath = (Resolve-Path "$PSScriptRoot\Dummy.tpzip").ToString()
+
 function Start-MessageFilter {
     [CmdletBinding()]
     param ()
@@ -133,8 +135,7 @@ function Invoke-CommandWithRetry {
             }
         } while ($failures -lt $Count)
 
-        if ($failures -eq $Count)
-        {
+        if ($failures -eq $Count) {
             Write-Error "Maximum amount of retries ($Count) have been reached"
         }
     }
@@ -312,8 +313,7 @@ function New-DummyTwincatSolution {
     [CmdletBinding()]
     param (
         [Parameter(Mandatory = $true, ValueFromPipeline = $true)][System.__ComObject]$DteInstace,
-        [string]$Path = "$Env:TEMP\$([Guid]::NewGuid())",
-        [string]$DummyProjectPath = (Resolve-Path "$PSScriptRoot\Dummy.tpzip").ToString()
+        [string]$Path = "$Env:TEMP\$([Guid]::NewGuid())"
     )
 
     Write-Verbose "Creating a new TwinCAT solution in $Path ..."
@@ -332,7 +332,7 @@ function New-DummyTwincatSolution {
     $plc = $systemManager.LookupTreeItem("TIPC")
     
     Write-Verbose "Loading a dummy PLC project from $DummyProjectPath ..."
-    $dummyProject = $plc.CreateChild("Dummy", 0, $null, $DummyProjectPath)
+    $dummyProject = $plc.CreateChild("", 0, $null, $DummyProjectPath)
 
     if ($dummyProject) {
         Write-Verbose "... successful"
@@ -349,7 +349,6 @@ function Install-TcLibrary {
     param (
         [Parameter(Mandatory = $true, ValueFromPipeline = $true)][System.__ComObject]$DteInstace,
         [Parameter(Mandatory = $true)]$Path,
-        [string]$DummyProjectPath = (Resolve-Path "$PSScriptRoot\Dummy.tpzip").ToString(),
         [string]$TmpPath = "$Env:TEMP\$([Guid]::NewGuid())",
         [string]$LibRepo = "System",
         [switch]$Force
@@ -359,16 +358,12 @@ function Install-TcLibrary {
         throw "Provided library path $Path does not exist"
     }
     
-    if (!(Test-Path $DummyProjectPath -PathType Leaf)) {
-        throw "Provided (tpzip) PLC project path $DummyProjectPath does not exist"
-    }
-    
     if (!$DteInstace) {
         throw "No DTE instance provided, or it is null"
     }
     
-    $null = New-DummyTwincatSolution -DteInstace $DteInstace -Path $TmpPath -DummyProjectPath $DummyProjectPath
-    
+    $dummyPrj = New-DummyTwincatSolution -DteInstace $DteInstace -Path $TmpPath
+
     try {
         $systemManager = $DteInstace.Solution.Projects.Item(1).Object
     }
@@ -377,7 +372,7 @@ function Install-TcLibrary {
     }
     
     try {
-        $references = $systemManager.LookupTreeItem("TIPC^Dummy^Dummy Project^References")
+        $references = $systemManager.LookupTreeItem("$($dummyPrj[0].PathName)^References")
     }
     catch {
         throw "Failed to look up the project references"
@@ -418,22 +413,16 @@ function Uninstall-TcLibrary {
         [Parameter(Mandatory = $true)]$LibName,
         [string]$LibVersion = "*",
         [string]$Distributor = $LibName,
-        [string]$DummyProjectPath = (Resolve-Path "$PSScriptRoot\Dummy.tpzip").ToString(),
         [string]$TmpPath = "$Env:TEMP\$([Guid]::NewGuid())",
         [string]$LibRepo = "System"
     )
 
-    if (!(Test-Path $DummyProjectPath -PathType Leaf)) {
-        Write-Error $_
-        throw "Provided (tpzip) PLC project path $DummyProjectPath does not exist"
-    }
-    
     if (!$DteInstace) {
         Write-Error $_
         throw "No DTE instance provided, or it is null"
     }
     
-    $null = New-DummyTwincatSolution -DteInstace $DteInstace -Path $TmpPath -DummyProjectPath $DummyProjectPath
+    $dummyPrj = New-DummyTwincatSolution -DteInstace $DteInstace -Path $TmpPath
     
     try {
         $systemManager = $DteInstace.Solution.Projects.Item(1).Object
@@ -443,7 +432,8 @@ function Uninstall-TcLibrary {
     }
     
     try {
-        $references = $systemManager.LookupTreeItem("TIPC^Dummy^Dummy Project^References")
+        $references = $systemManager.LookupTreeItem("$($dummyPrj[0].PathName)^References")
+        $references = $systemManager.LookupTreeItem("$($dummyPrj[0].PathName)^References")
     }
     catch {
         throw "Failed to look up the project references"
