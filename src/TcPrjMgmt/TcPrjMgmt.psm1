@@ -289,7 +289,12 @@ function Export-TcProject {
 
     switch ($Format) {
         "Library" {
-            $plc.SaveAsLibrary($fullPath, $InstallUponSave)
+            
+            Invoke-CommandWithRetry -ScriptBlock {
+                $plc.SaveAsLibrary($fullPath, $InstallUponSave)
+
+                if (!(Test-Path $fullPath -PathType Leaf)) { throw }
+            } -Count 10 -Milliseconds 100
         }
 
         "PlcOpen" {
@@ -298,11 +303,15 @@ function Export-TcProject {
                 break;
             }
 
-            $plc.PlcOpenExport($fullPath, $ExportItems)
+            Invoke-CommandWithRetry -ScriptBlock {
+                $plc.PlcOpenExport($fullPath, $ExportItems)
+
+                if (!(Test-Path $fullPath -PathType Leaf)) { throw }
+            } -Count 10 -Milliseconds 100
         }
     }
 
-    if ($?) {
+    if (Test-Path $fullPath -PathType Leaf) {
         Write-Host "$ProjectName exported to $fullPath"
     }
 
