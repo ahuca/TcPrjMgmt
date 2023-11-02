@@ -87,6 +87,15 @@ internal interface IOleMessageFilter
 }
 "@
 
+$PlcProjectExtension = ".plcproj"
+$ProgIdList = @(
+    "TcXaeShell.DTE.15.0", # TcXaeShell (VS2017)
+    "VisualStudio.DTE.16.0", # VS2019
+    "VisualStudio.DTE.15.0", # VS2017
+    "VisualStudio.DTE.14.0", # VS2015
+    "VisualStudio.DTE.12.0" # VS2013
+)
+
 Add-Type -TypeDefinition $MsgFilterSrc
 
 $public = @( Get-ChildItem -Path $PSScriptRoot\Public\*.ps1 -Recurse -ErrorAction SilentlyContinue )
