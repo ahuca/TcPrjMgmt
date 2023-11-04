@@ -5,10 +5,18 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "PowerShell Run Pester Tests",
+            "name": "PowerShell Run All Pester Tests",
             "type": "PowerShell",
             "request": "launch",
             "script": "Invoke-Pester -Output Detailed",
+            "createTemporaryIntegratedConsole": true,
+            "attachDotnetDebugger": true
+        },
+        {
+            "name": "PowerShell Run Only Quick Pester Tests",
+            "type": "PowerShell",
+            "request": "launch",
+            "script": "Invoke-Pester -Path ${workspaceFolder}\\tests\\*.Tests.ps1 -Output Detailed",
             "createTemporaryIntegratedConsole": true,
             "attachDotnetDebugger": true
         }
