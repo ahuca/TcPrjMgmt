@@ -4,7 +4,7 @@ function New-DummyTwincatSolution {
     [CmdletBinding()]
     param (
         [Parameter(Mandatory = $true, ValueFromPipeline = $true)][System.__ComObject]$DteInstace,
-        [string]$Path = "$Env:TEMP\$([Guid]::NewGuid())"
+        [string]$Path = (Join-Path -Path ([System.IO.Path]::GetTempPath()) -ChildPath ([Guid]::NewGuid()))
     )
 
     Write-Verbose "Creating a new TwinCAT solution in $Path ..."

@@ -3,8 +3,8 @@
 Describe 'Get-PlcProjectFile.Tests' {
     Context 'given a path with one PLC project file' {
         It 'should return the expected file' {
-            $projectPath = "$PSScriptRoot\TestXaeProject\TestXaeProject\TestPlcProject"
-            $expected = "$projectPath\TestPlcProject.plcproj"
+            $projectPath = Join-Path -Path $PSScriptRoot -ChildPath "\TestXaeProject\TestXaeProject\TestPlcProject"
+            $expected = Join-Path -Path $projectPath -ChildPath "TestPlcProject$global:PlcProjectExtension"
 
             Get-PlcProjectFile -Path $projectPath | Should -Be $expected
         }
@@ -12,7 +12,7 @@ Describe 'Get-PlcProjectFile.Tests' {
 
     Context 'given a valid PLC project file' {
         It 'should return the given path' {
-            $projectPath = "$PSScriptRoot\TestXaeProject\TestXaeProject\TestPlcProject\TestPlcProject.plcproj"
+            $projectPath = Join-Path -Path $PSScriptRoot -ChildPath "\TestXaeProject\TestXaeProject\TestPlcProject\TestPlcProject.plcproj"
             Get-PlcProjectFile -Path $projectPath | Should -Be $projectPath
         }
     }
@@ -25,7 +25,7 @@ Describe 'Get-PlcProjectFile.Tests' {
 
     Context 'given a path with no PLC project' {
         BeforeAll {
-            $folderName = "$env:TEMP\$(New-Guid)"
+            $folderName = Join-Path -Path ([System.IO.Path]::GetTempPath()) -ChildPath ([Guid]::NewGuid())
             New-Item -Type Directory $folderName
         }
 
@@ -40,14 +40,14 @@ Describe 'Get-PlcProjectFile.Tests' {
 
     Context 'given a path with multiple PLC projects' {
         BeforeAll {
-            $folderName = "$env:TEMP\$(New-Guid)"
+            $folderName = Join-Path -Path ([System.IO.Path]::GetTempPath()) -ChildPath ([Guid]::NewGuid())
             New-Item -Type Directory $folderName
             $projectFiles = @()
             for ($i = 0; $i -lt 5; $i++) {
                 $file = "PlcProjectFile$($i + 1)$global:PlcProjectExtension"
                 New-Item -Path $folderName -Type File -Name $file
 
-                $projectFiles += [System.IO.FileInfo](Resolve-Path "$folderName\$file").ToString()
+                $projectFiles += [System.IO.FileInfo](Resolve-Path (Join-Path -Path $folderName -ChildPath $file)).ToString()
             }
         }
 

@@ -6,6 +6,8 @@ function Import-ModuleUnderTest {
 
 Import-ModuleUnderTest
 
+$script:TestXaeProject = Resolve-Path "$PSScriptRoot\TestXaeProject"
+$script:TestXaeSolutionFile = Resolve-Path "$TestXaeProject\TestXaeProject.sln"
 $script:PlcProjectExtension = ".plcproj"
 $script:PlcProjectExampleContent = '<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 <PropertyGroup>

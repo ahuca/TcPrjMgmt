@@ -3,7 +3,7 @@ function Install-TcLibrary {
     param (
         [Parameter(Mandatory = $true, ValueFromPipeline = $true)][System.__ComObject]$DteInstace,
         [Parameter(Mandatory = $true)]$Path,
-        [string]$TmpPath = "$Env:TEMP\$([Guid]::NewGuid())",
+        [string]$TmpPath = (Join-Path -Path ([System.IO.Path]::GetTempPath()) -ChildPath ([Guid]::NewGuid())),
         [string]$LibRepo = "System",
         [switch]$Force
     )

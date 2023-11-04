@@ -1,4 +1,4 @@
-. "$PSScriptRoot\Setup-TcPrjMgmtTest.ps1"
+. "$PSScriptRoot\..\Setup-TcPrjMgmtTest.ps1"
 
 Describe 'Close-DteInstance' {
     BeforeAll {

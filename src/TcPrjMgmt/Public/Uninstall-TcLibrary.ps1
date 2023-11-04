@@ -5,7 +5,7 @@ function Uninstall-TcLibrary {
         [Parameter(Mandatory = $true)]$LibName,
         [string]$LibVersion = "*",
         [string]$Distributor = $LibName,
-        [string]$TmpPath = "$Env:TEMP\$([Guid]::NewGuid())",
+        [string]$TmpPath = (Join-Path -Path ([System.IO.Path]::GetTempPath()) -ChildPath ([Guid]::NewGuid())),
         [string]$LibRepo = "System"
     )
 

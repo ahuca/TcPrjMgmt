@@ -13,7 +13,7 @@ function Resolve-OutFile {
         $parent = Split-Path -Path $OutFile
         if (!$parent) { $parent = $PWD }
         $leaf = Split-Path -Path $OutFile -Leaf
-        $fullPath = "$(Resolve-Path $parent)\$($leaf)"
+        $fullPath = Join-Path -Path (Resolve-Path $parent) -ChildPath $leaf
 
         return $fullPath
     }

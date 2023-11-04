@@ -2,9 +2,9 @@
 
 Describe 'Step-PlcProjectVersion' {
     BeforeEach {
-        $projectFolder = "$env:TEMP\$(New-Guid)"
+        $projectFolder = Join-Path -Path ([System.IO.Path]::GetTempPath()) -ChildPath ([Guid]::NewGuid())
         New-Item -Type Directory $projectFolder
-        $projectFile = "$projectFolder\TestPlcProject$global:PlcProjectExtension"
+        $projectFile = Join-Path -Path $projectFolder -ChildPath "\TestPlcProject$global:PlcProjectExtension"
         New-Item -Type File $projectFile
         Set-Content -Value $global:PlcProjectExampleContent -Path $projectFile
         $currentVersion = Get-PlcProjectVersion -Path $projectFile

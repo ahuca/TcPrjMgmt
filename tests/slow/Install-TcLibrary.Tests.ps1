@@ -1,19 +1,19 @@
-. "$PSScriptRoot\Setup-TcPrjMgmtTest.ps1"
+. "$PSScriptRoot\..\Setup-TcPrjMgmtTest.ps1"
 
 Describe 'Install-TcLibrary' {
     BeforeAll {
-        $testSolution = "$PSScriptRoot\TestXaeProject\TestXaeProject.sln"
+        $testSolution = $TestXaeSolutionFile
         $testPlcProject = "TestPlcProject"
         $script:installedLibrary = $false
 
         Start-MessageFilter
         $dte = New-DteInstance -ForceProgId "TcXaeShell.DTE.15.0"
 
-        $outputPath = "$Env:TEMP\$([Guid]::NewGuid())"
+        $outputPath = Join-Path -Path ([System.IO.Path]::GetTempPath()) -ChildPath ([Guid]::NewGuid())
         New-Item -ItemType Directory -Path $outputPath
-        $script:libraryPath = "$outputPath\$testPlcProject.library"
+        $libraryPath = "$outputPath\$testPlcProject.library"
 
-        $dte | Export-TcProject -Solution $testSolution -ProjectName $testPlcProject -Format Library -OutFile $script:libraryPath
+        $dte | Export-TcProject -Solution $testSolution -ProjectName $testPlcProject -Format Library -OutFile $libraryPath
 
         $dte.Solution.Close($false)
     }
@@ -21,16 +21,16 @@ Describe 'Install-TcLibrary' {
     It 'should install' {
         Test-Path "$Env:TWINCAT3DIR\Components\Plc\Managed Libraries\TestPlcProject" -PathType Container | Should -Be $false
 
-        $dte | Install-TcLibrary -Path $script:libraryPath -Force
+        $dte | Install-TcLibrary -Path $libraryPath -Force
 
         Test-Path "$Env:TWINCAT3DIR\Components\Plc\Managed Libraries\TestPlcProject" -PathType Container | Should -Be $true
 
         $script:installedLibrary = (Get-ChildItem "$Env:TWINCAT3DIR\Components\Plc\Managed Libraries\TestPlcProject" -Recurse -Filter "$testPlcProject.library")
-        $script:installedLibrary | Should -Not -BeNullOrEmpty
+        $installedLibrary | Should -Not -BeNullOrEmpty
     }
 
     AfterAll {
-        if ($installedLibrary) {
+        if ($script:installedLibrary) {
             $dte | Uninstall-TcLibrary -LibName $testPlcProject -LibVersion "*"
         }
 
