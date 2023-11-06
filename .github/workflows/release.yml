@@ -1,27 +1,38 @@
-on:
-  push:
-    tags:
-      - "v*"
+name: Release
 
-name: Create Release
+on:
+  workflow_dispatch:
+
+env:
+  GH_TOKEN: ${{ secrets.RELEASE_TOKEN }}
 
 jobs:
-  create-github-release:
-    name: Create GitHub release
-    runs-on: ubuntu-latest
+  release-to-github:
+    name: Release to Github
     permissions:
       contents: write
+      issues: write
+      pull-requests: write
+    runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
+      - name: Check out source
         uses: actions/checkout@v3
-      - name: Create release
-        run: gh release create ${{ github.ref }} --generate-notes
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          token: ${{ secrets.RELEASE_TOKEN }}
 
-  publish-to-psgallery:
+      - name: Setup Git
+        run: |
+          git config user.name 'Giang Nguyen'
+          git config user.email 'nhgiangvt117@gmail.com'
+
+      - name: Run semantic release
+        run: |
+          npm ci
+          npx semantic-release
+
+  release-to-psgallery:
     name: Publish to PSGallery
-    needs: create-github-release
+    needs: release-to-github
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code

@@ -1,0 +1,90 @@
+branches: ['main']
+ci: true
+debug: true
+tagFormat: 'v${version}'
+
+preset: 'conventionalcommits'
+
+analyzeCommits:
+  - path: '@semantic-release/commit-analyzer'
+    releaseRules:
+      - breaking: true
+        release: minor # Because we are in initial development
+      - type: build
+        release: patch
+      - type: chore
+        release: false
+      - type: ci
+        release: false
+      - type: docs
+        release: false
+      - type: feat
+        release: patch
+      - type: fix
+        release: patch
+      - type: perf
+        release: patch
+      - type: refactor
+        release: false
+      - type: revert
+        release: patch
+      - type: style
+        release: false
+      - type: test
+        release: false
+
+generateNotes:
+  - path: '@semantic-release/release-notes-generator'
+    writerOpts:
+      groupBy: 'type'
+      commitGroupsSort: 'title'
+      commitsSort: 'header'
+    linkCompare: true
+    linkReferences: true
+    presetConfig:
+      types:
+        - type: 'build'
+          section: '🦊 CI/CD'
+          hidden: false
+        - type: 'chore'
+          section: 'Other'
+          hidden: false
+        - type: 'ci'
+          section: '🦊 CI/CD'
+          hidden: false
+        - type: 'docs'
+          section: '📔 Docs'
+          hidden: false
+        - type: 'example'
+          section: '📝 Examples'
+          hidden: false
+        - type: 'feat'
+          section: '🚀 Features'
+          hidden: false
+        - type: 'fix'
+          section: '🛠 Fixes'
+          hidden: false
+        - type: 'perf'
+          section: '⏩ Performance'
+        - type: 'refactor'
+          section: ':scissors: Refactor'
+          hidden: false
+        - type: 'revert'
+          section: '🙅‍♂️ Reverts'
+        - type: 'style'
+          section: '💈 Style'
+        - type: 'test'
+          section: '🧪 Tests'
+          hidden: false
+
+prepare:
+  - path: '@semantic-release/exec'
+    shell: pwsh
+    cmd: './Update-FunctionsToExport.ps1'
+  - path: '@semantic-release/exec'
+    shell: pwsh
+    cmd: './Update-ModuleVersion.ps1 -Version ${nextRelease.version}'
+  - path: '@semantic-release/changelog'
+  - path: '@semantic-release/git'
+    message: 'RELEASE: ${nextRelease.version}'
+    assets: ['CHANGELOG.md', 'src/TcPrjMgmt/TcPrjMgmt.psd1']
