@@ -2,7 +2,7 @@ $modulePath = Join-Path -Path $PSScriptRoot -ChildPath "\src\TcPrjMgmt"
 $publicFolder = Join-Path -Path $modulePath -ChildPath "\Public"
 $manifestFile = Join-Path -Path $modulePath -ChildPath "TcPrjMgmt.psd1"
 
-$publicScripts = (Get-ChildItem -Path $publicFolder | Select-Object Name).Name
+$publicScripts = (Get-ChildItem -Path $publicFolder | Select-Object Name).Name | Split-Path -LeafBase
 
 $functionsToExport = ($publicScripts | ForEach-Object {$_.ToString()})
 
