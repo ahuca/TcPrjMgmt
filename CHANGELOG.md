@@ -1,3 +1,15 @@
+## [0.3.4](https://github.com/ahuca/TcPrjMgmt/compare/v0.3.3...v0.3.4) (2023-11-06)
+
+
+### 🦊 CI/CD
+
+* updated workflow ([ddc23f6](https://github.com/ahuca/TcPrjMgmt/commit/ddc23f64cdc14cef850d798ab60018ba5d95972e))
+
+
+### 🛠 Fixes
+
+* fixed  `Update-FunctionsToExport` ([b937aa5](https://github.com/ahuca/TcPrjMgmt/commit/b937aa51dcd0f8de2c7f23c18349a4cf3a06b78c))
+
 ## [0.3.3](https://github.com/ahuca/TcPrjMgmt/compare/v0.3.2...v0.3.3) (2023-11-06)
 
 
