@@ -29,14 +29,3 @@ jobs:
         run: |
           npm ci
           npx semantic-release
-
-  release-to-psgallery:
-    name: Publish to PSGallery
-    needs: release-to-github
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-      - name: Publish to PSGallery
-        shell: pwsh
-        run: Publish-Module -Path "${{ github.workspace }}/src/TcPrjMgmt" -NuGetApiKey ${{ secrets.PSGALLERY_API_KEY }}
