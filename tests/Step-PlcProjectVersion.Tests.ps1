@@ -16,6 +16,7 @@ Describe 'Step-PlcProjectVersion' {
 
             Step-PlcProjectVersion -Path $projectFile -By Major
 
+            $newVersion | Should -Not -Be $currentVersion
             Get-PlcProjectVersion -Path $projectFile | Should -Be $newVersion
         }
     }
