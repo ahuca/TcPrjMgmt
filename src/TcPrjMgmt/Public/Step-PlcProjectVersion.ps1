@@ -6,7 +6,7 @@ function Step-PlcProjectVersion {
     )
     
     process {
-        $project = Get-PlcProjectFile $Path
+        $project = Get-PlcProjectFile $Path -OnlyOne
 
         $xmlDoc = New-Object -TypeName xml
         $xmlDoc.Load($project)
