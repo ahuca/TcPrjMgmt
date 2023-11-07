@@ -1,3 +1,10 @@
+## [0.3.5](https://github.com/ahuca/TcPrjMgmt/compare/v0.3.4...v0.3.5) (2023-11-07)
+
+
+### 🚀 Features
+
+* added `Update-PlcProjectVersion` [#4](https://github.com/ahuca/TcPrjMgmt/issues/4) ([a5a9739](https://github.com/ahuca/TcPrjMgmt/commit/a5a97398804189a8dcb0ad4e6cc142acc357ef3d))
+
 ## [0.3.4](https://github.com/ahuca/TcPrjMgmt/compare/v0.3.3...v0.3.4) (2023-11-06)
 
 
