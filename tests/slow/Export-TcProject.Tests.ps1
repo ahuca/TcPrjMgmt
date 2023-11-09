@@ -28,6 +28,10 @@ Describe 'Export-TcProject' {
             Test-Path $outputFile | Should -BeTrue
             Remove-Item -Path $outputFile
         }
+
+        It 'using incorrect parameter. Should throw' {
+            { $dte | Export-TcProject -Solution $testSolution -ProjectName $testPlcProject -Format Library -OutFile "$testPlcProject.library" -ExportItems "FOO" } | Should -Throw
+        }
     }
 
     Context 'as PLCOpen' {
@@ -49,6 +53,10 @@ Describe 'Export-TcProject' {
 
             Test-Path $outputFile | Should -BeTrue
             Remove-Item -Path $outputFile
+        }
+
+        It 'using incorrect parameter. Should throw' {
+            { $dte | Export-TcProject -Solution $testSolution -ProjectName $testPlcProject -Format PlcOpen -ExportItems "POUs" -OutFile "$testPlcProject.xml" -InstallUponSave } | Should -Throw
         }
     }
 
