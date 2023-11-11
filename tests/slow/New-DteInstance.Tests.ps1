@@ -21,7 +21,7 @@ Describe 'New-DteInstance' {
     
                 $dte.Version | Should -Be ($v.Split(".")[2..3] -join ".")
                 
-                Close-DteInstace $dte
+                Close-DteInstance $dte
             }
         }
     }
@@ -37,7 +37,7 @@ Describe 'New-DteInstance' {
         }
 
         AfterAll {
-            $dte | Close-DteInstace
+            $dte | Close-DteInstance
         }
     }
 

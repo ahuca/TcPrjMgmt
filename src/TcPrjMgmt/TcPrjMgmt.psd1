@@ -69,7 +69,7 @@ Description = 'Utilities for managing TwinCAT solutions and projects. Including 
 # NestedModules = @()
 
 # Functions to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no functions to export.
-FunctionsToExport = 'Close-DteInstace', 'Export-TcProject', 'Get-PlcProjectFile', 
+FunctionsToExport = 'Close-DteInstance', 'Export-TcProject', 'Get-PlcProjectFile', 
                'Get-PlcProjectVersion', 'Install-TcLibrary', 'New-DteInstance', 
                'Start-MessageFilter', 'Step-PlcProjectVersion', 'Step-Version', 
                'Stop-MessageFilter', 'Uninstall-TcLibrary', 

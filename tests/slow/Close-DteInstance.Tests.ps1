@@ -8,7 +8,7 @@ Describe 'Close-DteInstance' {
 
     It 'should close' {
         $dte | Should -Not -Be $null
-        $dte | Close-DteInstace
+        $dte | Close-DteInstance
         $dte.PSObject.Properties | ForEach-Object {$_.Value | Should -Be $null}
     }
 

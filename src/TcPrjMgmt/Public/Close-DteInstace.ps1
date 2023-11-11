@@ -1,4 +1,4 @@
-function Close-DteInstace {
+function Close-DteInstance {
     [CmdletBinding()]
     param (
         [Parameter(Mandatory = $true, ValueFromPipeline = $true)]$DteInstace,

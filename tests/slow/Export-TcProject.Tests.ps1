@@ -61,7 +61,7 @@ Describe 'Export-TcProject' {
     }
 
     AfterAll {
-        Close-DteInstace $dte
+        Close-DteInstance $dte
         Stop-MessageFilter
     }
 }

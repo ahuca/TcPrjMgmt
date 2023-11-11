@@ -41,7 +41,7 @@ Describe 'Install-TcLibrary' {
             $dte | Uninstall-TcLibrary -LibName $TestPlcProject -LibVersion "*"
         }
 
-        Close-DteInstace $dte
+        Close-DteInstance $dte
         Stop-MessageFilter
     }
 }
