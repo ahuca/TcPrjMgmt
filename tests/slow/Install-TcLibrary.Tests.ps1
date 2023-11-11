@@ -7,7 +7,7 @@ Describe 'Install-TcLibrary' {
         Start-MessageFilter
         $dte = New-DteInstance -ForceProgId "TcXaeShell.DTE.15.0"
 
-        $libraryPath = $TestPlcLibrary
+        $libraryPath = $TestPlcLibraryPath
     }
 
     Context 'given a DTE instance' {
