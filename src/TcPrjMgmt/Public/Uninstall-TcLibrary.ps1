@@ -55,29 +55,15 @@ function Uninstall-TcLibrary {
         }
         
         Write-Host "Successfully uninstalled $LibName version `"$LibVersion`" from $LibRepo"
-    
-
-        Write-Verbose "Cleaning up temporary directory $TmpPath ..."
-        $DteInstace.Solution.Close($false)
-        Remove-Item $TmpPath -Recurse -Force
 
         trap {
             Write-Error "$_"
-            Write-Verbose "Cleaning up temporary directory $TmpPath ..."
-            $DteInstace.Solution.Close($false)
-            if ($CloseDteInstace) {
-                $DteInstace.Quit()
-                Stop-MessageFilter
-            }
-            Remove-Item $TmpPath -Recurse -Force
+            Remove-SideEffects -DteInstace $DteInstace -TmpPath $TmpPath -CloseDteInstance $CloseDteInstace
             break;
         }
     }
 
     end {
-        if ($CloseDteInstace) {
-            $DteInstace.Quit()
-            Stop-MessageFilter
-        }
+        Remove-SideEffects -DteInstace $DteInstace -TmpPath $TmpPath -CloseDteInstance $CloseDteInstace
     }
 }
