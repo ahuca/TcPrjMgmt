@@ -1,10 +1,6 @@
 . "$PSScriptRoot\..\Setup-TcPrjMgmtTest.ps1"
 
 Describe 'New-DteInstance' {
-    BeforeAll {
-        Start-MessageFilter
-    }
-
     Context 'with forced ProgId' {
         It 'Should create a new instance with correct version' {
             $versions = @("TcXaeShell.DTE.15.0")
@@ -39,9 +35,5 @@ Describe 'New-DteInstance' {
         AfterAll {
             $dte | Close-DteInstance
         }
-    }
-
-    AfterAll {
-        Stop-MessageFilter
     }
 }

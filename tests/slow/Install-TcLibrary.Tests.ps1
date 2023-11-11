@@ -4,7 +4,6 @@ Describe 'Install-TcLibrary' {
     BeforeEach {
         $script:installedLibrary = $false
 
-        Start-MessageFilter
         $dte = New-DteInstance -ForceProgId "TcXaeShell.DTE.15.0"
 
         $libraryPath = $TestPlcLibraryPath
@@ -42,6 +41,5 @@ Describe 'Install-TcLibrary' {
         }
 
         Close-DteInstance $dte
-        Stop-MessageFilter
     }
 }

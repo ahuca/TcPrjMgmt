@@ -4,7 +4,6 @@ Describe 'Export-TcProject' {
     BeforeAll {
         $testSolution = $TestXaeSolutionFile
         $testPlcProject = "TestPlcProject"
-        Start-MessageFilter
         $dte = New-DteInstance -ForceProgId "TcXaeShell.DTE.15.0"
     }
 
@@ -62,6 +61,5 @@ Describe 'Export-TcProject' {
 
     AfterAll {
         Close-DteInstance $dte
-        Stop-MessageFilter
     }
 }

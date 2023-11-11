@@ -13,8 +13,7 @@ function Invoke-CommandWithRetry {
     Process {
         do {
             try {
-                $ScriptBlock.Invoke()
-                break
+                return $ScriptBlock.Invoke()
             }
             catch {
                 $failures++

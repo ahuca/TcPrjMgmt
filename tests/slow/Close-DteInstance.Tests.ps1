@@ -2,7 +2,6 @@
 
 Describe 'Close-DteInstance' {
     BeforeAll {
-        Start-MessageFilter
         $dte = New-DteInstance
     }
 
@@ -10,9 +9,5 @@ Describe 'Close-DteInstance' {
         $dte | Should -Not -Be $null
         $dte | Close-DteInstance
         $dte.PSObject.Properties | ForEach-Object {$_.Value | Should -Be $null}
-    }
-
-    AfterAll {
-        Stop-MessageFilter
     }
 }
