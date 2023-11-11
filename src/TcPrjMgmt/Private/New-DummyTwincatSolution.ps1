@@ -27,7 +27,7 @@ function New-DummyTwincatSolution {
         if (!$result) { throw }
 
         return $result
-    } -Count 10 -Milliseconds 200
+    } -Count 10 -Milliseconds 200 -ErrorAction Stop
 
     $systemManager = Invoke-CommandWithRetry -ScriptBlock {
         $result = $project.Object
@@ -35,13 +35,13 @@ function New-DummyTwincatSolution {
         if (!$result) { throw }
 
         return $result
-    } -Count 10 -Milliseconds 200
+    } -Count 10 -Milliseconds 200 -ErrorAction Stop
 
     Invoke-CommandWithRetry -ScriptBlock {
         $script:plcTreeItem = $systemManager.LookupTreeItem("TIPC")
 
         if (!$script:plcTreeItem) { throw }
-    } -Count 10 -Milliseconds 200
+    } -Count 10 -Milliseconds 200 -ErrorAction Stop
 
     Write-Verbose "Loading a dummy PLC project from $DummyProjectPath ..."
 
@@ -51,7 +51,7 @@ function New-DummyTwincatSolution {
         if (!$result) { throw }
 
         return $result
-    } -Count 10 -Milliseconds 200
+    } -Count 10 -Milliseconds 200 -ErrorAction Stop
 
     if ($dummyProject) {
         Write-Verbose "... successful"

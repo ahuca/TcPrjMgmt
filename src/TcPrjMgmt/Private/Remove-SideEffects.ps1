@@ -18,7 +18,9 @@ function Remove-SideEffects {
         $DteInstace.Solution.Close($false)
         Remove-Item $TmpPath -Recurse -Force
         if ($CloseDteInstance) {
-            $DteInstace.Quit()
+            Invoke-CommandWithRetry -ScriptBlock {
+                $DteInstace.Quit()
+            } -Count 10 -Milliseconds 200
             Stop-MessageFilter
         }
     }

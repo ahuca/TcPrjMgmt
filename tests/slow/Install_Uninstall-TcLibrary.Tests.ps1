@@ -1,5 +1,10 @@
 . "$PSScriptRoot\..\Setup-TcPrjMgmtTest.ps1"
 
+# Due to the facts that,
+# - Both these functions (Install-TcLibrary and Uninstall-TcLibrary) have side effects,
+# - We only use one single test library (tests\TestXaeProject\TestPlcProject.library) for testing these functions
+# We must combine the tests of these two functions so they can run sequentially without interfering each others.
+
 Describe 'Install-TcLibrary' {
     BeforeEach {
         $script:installedLibrary = $false
@@ -41,5 +46,16 @@ Describe 'Install-TcLibrary' {
         }
 
         Close-DteInstance $dte
+    }
+}
+
+Describe 'Uninstall-TcLibrary' {
+    BeforeEach {
+        Install-TcLibrary -Path $TestPlcLibraryPath -Force
+    }
+
+    # We only test without a DTE instance because, Uninstall-TcLibrary is also "tested" implicitly in Install-TcLibrary.Tests.ps1
+    It 'should uninstall library' {
+        Uninstall-TcLibrary -LibName $TestPlcProject -LibVersion "*"
     }
 }

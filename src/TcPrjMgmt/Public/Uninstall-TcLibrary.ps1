@@ -34,29 +34,19 @@ function Uninstall-TcLibrary {
         
         $dummyPrj = New-DummyTwincatSolution -DteInstace $DteInstace -Path $TmpPath
         
-        try {
-            $systemManager = $DteInstace.Solution.Projects.Item(1).Object
-        }
-        catch {
-            throw "Failed to get the system manager object"
-        }
+        $systemManager = Invoke-CommandWithRetry -ScriptBlock {
+            return $DteInstace.Solution.Projects.Item(1).Object
+        } -Count 10 -Milliseconds 100 -ErrorAction Stop
 
-        try {
-            $references = $systemManager.LookupTreeItem("$($dummyPrj[0].PathName)^References")
-            $references = $systemManager.LookupTreeItem("$($dummyPrj[0].PathName)^References")
-        }
-        catch {
-            throw "Failed to look up the project references"
-        }
+        Invoke-CommandWithRetry -ScriptBlock {
+            $script:references = $systemManager.LookupTreeItem("$($dummyPrj[0].PathName)^References")
+        } -Count 10 -Milliseconds 100 -ErrorAction Stop
 
         Write-Host "Uninstalling library $LibName version `"$LibVersion`""
-        
-        try {
+
+        Invoke-CommandWithRetry -ScriptBlock {
             $references.UninstallLibrary($LibRepo, $LibName, $LibVersion, $Distributor)
-        }
-        catch {
-            throw "Failed to uninstall $LibName $LibVersion from $LibRepo"
-        }
+        } -Count 10 -Milliseconds 100 -ErrorAction Stop
         
         Write-Host "Successfully uninstalled $LibName version `"$LibVersion`" from $LibRepo"
 
