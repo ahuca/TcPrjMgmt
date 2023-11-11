@@ -1,3 +1,10 @@
+## [0.4.1](https://github.com/ahuca/TcPrjMgmt/compare/v0.4.0...v0.4.1) (2023-11-11)
+
+
+### 🛠 Fixes
+
+* synthetically bump the version due to earlier PSGallery hickups ([7220330](https://github.com/ahuca/TcPrjMgmt/commit/7220330256d25db71bff7e2eb7d6467c44c124dc))
+
 ## [0.4.0](https://github.com/ahuca/TcPrjMgmt/compare/v0.3.5...v0.4.0) (2023-11-11)
 
 
