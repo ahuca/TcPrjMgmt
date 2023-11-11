@@ -17,6 +17,10 @@ function Install-TcLibrary {
         [switch]$Force
     )
 
+    begin {
+        $CloseDteInstace = $false
+    }
+
     process {
         if (!$DteInstace) {
             Start-MessageFilter

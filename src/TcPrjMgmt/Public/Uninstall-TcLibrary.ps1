@@ -21,6 +21,10 @@ function Uninstall-TcLibrary {
         $LibRepo = "System"
     )
 
+    begin {
+        $CloseDteInstace = $false
+    }
+
     process {
         if (!$DteInstace) {
             Start-MessageFilter
@@ -36,7 +40,7 @@ function Uninstall-TcLibrary {
         catch {
             throw "Failed to get the system manager object"
         }
-        
+
         try {
             $references = $systemManager.LookupTreeItem("$($dummyPrj[0].PathName)^References")
             $references = $systemManager.LookupTreeItem("$($dummyPrj[0].PathName)^References")
@@ -44,7 +48,7 @@ function Uninstall-TcLibrary {
         catch {
             throw "Failed to look up the project references"
         }
-        
+
         Write-Host "Uninstalling library $LibName version `"$LibVersion`""
         
         try {
