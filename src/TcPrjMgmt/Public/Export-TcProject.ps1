@@ -1,15 +1,24 @@
 function Export-TcProject {
     [CmdletBinding()]
     param (
-        [Parameter(Mandatory = $true, ValueFromPipeline = $true)][System.__ComObject]$DteInstace,
+        [Parameter(ValueFromPipeline = $true)]
+        [System.__ComObject]
+        $DteInstace,
 
-        [Parameter(Mandatory = $true)][string]$Solution,
+        [Parameter(Mandatory = $true)]
+        [string]
+        $Solution,
 
-        [Parameter(Mandatory = $true)][string]$ProjectName,
+        [Parameter(Mandatory = $true)]
+        [string]
+        $ProjectName,
 
-        [ValidateSet('Library', 'PlcOpen')][string]$Format = 'Library',
+        [ValidateSet('Library', 'PlcOpen')]
+        [string]
+        $Format = 'Library',
 
-        [Parameter(Mandatory = $true)][string]$OutFile
+        [Parameter(Mandatory = $true)]
+        [string]$OutFile
     )
 
     DynamicParam {
@@ -39,6 +48,8 @@ function Export-TcProject {
     }
 
     begin {
+        $CloseDteInstace = $false
+
         switch ($Format) {
             'Library' {
                 if ($PSBoundParameters.ExportItems) {
@@ -54,6 +65,12 @@ function Export-TcProject {
     }
 
     process {
+        if (!$DteInstace) {
+            Start-MessageFilter
+            $DteInstace = New-DteInstance -ErrorAction Stop
+            $CloseDteInstace = $true
+        }
+
         $sln = $DteInstace.Solution
 
         $Solution = Resolve-Path $Solution
@@ -111,7 +128,9 @@ function Export-TcProject {
                 Invoke-CommandWithRetry -ScriptBlock {
                     $plc.PlcOpenExport($fullPath, $PSBoundParameters.ExportItems)
     
-                    if (!(Test-Path $fullPath -PathType Leaf)) { throw }
+                    if (!(Test-Path $fullPath -PathType Leaf)) { 
+                        throw 
+                    }
                 } -Count 10 -Milliseconds 100 -ErrorAction Stop
             }
         }
@@ -124,12 +143,13 @@ function Export-TcProject {
         }
 
         trap {
-            $DteInstace.Solution.Close($false)
+            Write-Error "$_"
+            Remove-SideEffects -DteInstace $DteInstace -TmpPath $TmpPath -CloseDteInstance $CloseDteInstace
             break
         }
     }
 
     end {
-        $DteInstace.Solution.Close($false)
+        Remove-SideEffects -DteInstace $DteInstace -TmpPath $TmpPath -CloseDteInstance $CloseDteInstace
     }
 }

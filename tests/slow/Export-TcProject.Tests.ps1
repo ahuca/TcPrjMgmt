@@ -46,16 +46,35 @@ Describe 'Export-TcProject' {
         }
 
         It 'without any path. Should save to working directory' {
-            $outputFile = Join-Path -Path $PWD -ChildPath "$testPlcProject.xml"
+            Invoke-Command -ScriptBlock {
+                $outputPath = Join-Path -Path $TestDrive -ChildPath ([Guid]::NewGuid())
+                New-Item -Type Directory $outputPath
+                Set-Location -Path $outputPath
+                Write-Host $PWD
+                $outputFile = Join-Path -Path $outputPath -ChildPath "$testPlcProject.xml"
 
-            $dte | Export-TcProject -Solution $testSolution -ProjectName $testPlcProject -Format PlcOpen -ExportItems "POUs" -OutFile "$testPlcProject.xml"
+                $dte | Export-TcProject -Solution $testSolution -ProjectName $testPlcProject -Format PlcOpen -ExportItems "POUs" -OutFile "$testPlcProject.xml"
 
-            Test-Path $outputFile | Should -BeTrue
-            Remove-Item -Path $outputFile
+                Test-Path $outputFile | Should -BeTrue
+                Remove-Item -Path $outputFile
+            }
         }
 
         It 'using incorrect parameter. Should throw' {
             { $dte | Export-TcProject -Solution $testSolution -ProjectName $testPlcProject -Format PlcOpen -ExportItems "POUs" -OutFile "$testPlcProject.xml" -InstallUponSave } | Should -Throw
+        }
+    }
+
+    Context 'without a DTE instance' {
+        It 'should self service own instance' {
+            $outputPath = Join-Path -Path $TestDrive -ChildPath ([Guid]::NewGuid())path
+            New-Item -ItemType Directory -Path $outputPath
+            $outputFile = Join-Path -Path $outputPath -ChildPath "$testPlcProject.library"
+
+            Export-TcProject -Solution $testSolution -ProjectName $testPlcProject -Format Library -OutFile $outputFile
+
+            Test-Path $outputFile | Should -BeTrue
+            Remove-Item -Path $outputPath -Recurse
         }
     }
 
