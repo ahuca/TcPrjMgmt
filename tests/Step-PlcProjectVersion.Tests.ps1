@@ -2,7 +2,7 @@
 
 Describe 'Step-PlcProjectVersion' {
     BeforeEach {
-        $projectFolder = Join-Path -Path ([System.IO.Path]::GetTempPath()) -ChildPath ([Guid]::NewGuid())
+        $projectFolder = Join-Path -Path $TestDrive -ChildPath ([Guid]::NewGuid())
         New-Item -Type Directory $projectFolder
         $projectFile = Join-Path -Path $projectFolder -ChildPath "\TestPlcProject$global:PlcProjectExtension"
         New-Item -Type File $projectFile

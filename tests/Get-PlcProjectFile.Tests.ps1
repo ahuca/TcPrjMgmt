@@ -25,7 +25,7 @@ Describe 'Get-PlcProjectFile.Tests' {
 
     Context 'given a path with no PLC project' {
         BeforeAll {
-            $folderName = Join-Path -Path ([System.IO.Path]::GetTempPath()) -ChildPath ([Guid]::NewGuid())
+            $folderName = Join-Path -Path $TestDrive -ChildPath ([Guid]::NewGuid())
             New-Item -Type Directory $folderName
         }
 
@@ -40,7 +40,7 @@ Describe 'Get-PlcProjectFile.Tests' {
 
     Context 'given a path with multiple PLC projects' {
         BeforeAll {
-            $folderName = Join-Path -Path ([System.IO.Path]::GetTempPath()) -ChildPath ([Guid]::NewGuid())
+            $folderName = Join-Path -Path $TestDrive -ChildPath ([Guid]::NewGuid())
             New-Item -Type Directory $folderName
             $projectFiles = @()
             for ($i = 0; $i -lt 5; $i++) {

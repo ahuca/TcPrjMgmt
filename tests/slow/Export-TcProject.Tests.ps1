@@ -10,7 +10,7 @@ Describe 'Export-TcProject' {
 
     Context 'as a library' {
         It 'given a specific path. Should save to given path' {
-            $outputPath = Join-Path -Path ([System.IO.Path]::GetTempPath()) -ChildPath ([Guid]::NewGuid())path
+            $outputPath = Join-Path -Path $TestDrive -ChildPath ([Guid]::NewGuid())path
             New-Item -ItemType Directory -Path $outputPath
             $outputFile = Join-Path -Path $outputPath -ChildPath "$testPlcProject.library"
 
@@ -36,7 +36,7 @@ Describe 'Export-TcProject' {
 
     Context 'as PLCOpen' {
         It 'given a specific path. Should save to given path' {
-            $outputPath = Join-Path -Path ([System.IO.Path]::GetTempPath()) -ChildPath ([Guid]::NewGuid())
+            $outputPath = Join-Path -Path $TestDrive -ChildPath ([Guid]::NewGuid())
             New-Item -ItemType Directory -Path $outputPath
             $outputFile = Join-Path -Path $outputPath -ChildPath "$testPlcProject.xml"
 
