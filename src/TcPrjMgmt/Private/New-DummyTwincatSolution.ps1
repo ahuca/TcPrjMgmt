@@ -3,8 +3,11 @@ $DummyProjectPath = (Resolve-Path "$PSScriptRoot\..\Dummy.tpzip").ToString()
 function New-DummyTwincatSolution {
     [CmdletBinding()]
     param (
-        [Parameter(Mandatory = $true, ValueFromPipeline = $true)][System.__ComObject]$DteInstace,
-        [string]$Path = (Join-Path -Path ([System.IO.Path]::GetTempPath()) -ChildPath ([Guid]::NewGuid()))
+        [Parameter(Mandatory = $true, ValueFromPipeline = $true)]
+        [System.__ComObject]
+        $DteInstace,
+
+        [Parameter(Mandatory = $true)][string]$Path
     )
 
     Write-Verbose "Creating a new TwinCAT solution in $Path ..."
