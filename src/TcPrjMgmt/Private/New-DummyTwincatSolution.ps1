@@ -12,7 +12,7 @@ function New-DummyTwincatSolution {
 
     Write-Verbose "Creating a new TwinCAT solution in $Path ..."
     
-    $tcProjectTemplatePath = "$Env:TWINCAT3DIR\Components\Base\PrjTemplate\TwinCAT Project.tsproj"
+    $tcProjectTemplatePath = Join-Path -Path $Env:TWINCAT3DIR -ChildPath "\Components\Base\PrjTemplate\TwinCAT Project.tsproj"
     
     if (!(Test-Path $tcProjectTemplatePath -PathType Leaf)) {
         Write-Error "Could not find TwinCAT project template at $tcProjectTemplatePath"
@@ -21,12 +21,37 @@ function New-DummyTwincatSolution {
 
     Write-Verbose "... successful"
 
-    $project = $DteInstace.Solution.AddFromTemplate($tcProjectTemplatePath, $Path, "TmpSolution.tsp")
-    $systemManager = $project.Object
-    $plc = $systemManager.LookupTreeItem("TIPC")
-    
+    $project = Invoke-CommandWithRetry -ScriptBlock {
+        $result = $DteInstace.Solution.AddFromTemplate($tcProjectTemplatePath, $Path, "TmpSolution.tsp")
+        
+        if (!$result) { throw }
+
+        return $result
+    } -Count 10 -Milliseconds 200
+
+    $systemManager = Invoke-CommandWithRetry -ScriptBlock {
+        $result = $project.Object
+
+        if (!$result) { throw }
+
+        return $result
+    } -Count 10 -Milliseconds 200
+
+    Invoke-CommandWithRetry -ScriptBlock {
+        $script:plcTreeItem = $systemManager.LookupTreeItem("TIPC")
+
+        if (!$script:plcTreeItem) { throw }
+    } -Count 10 -Milliseconds 200
+
     Write-Verbose "Loading a dummy PLC project from $DummyProjectPath ..."
-    $dummyProject = $plc.CreateChild("", 0, $null, $DummyProjectPath)
+
+    $dummyProject = Invoke-CommandWithRetry -ScriptBlock {
+        $result = $plcTreeItem.CreateChild("", 0, $null, $DummyProjectPath)
+
+        if (!$result) { throw }
+
+        return $result
+    } -Count 10 -Milliseconds 200
 
     if ($dummyProject) {
         Write-Verbose "... successful"

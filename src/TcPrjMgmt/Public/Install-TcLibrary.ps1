@@ -19,9 +19,9 @@ function Install-TcLibrary {
 
     process {
         if (!$DteInstace) {
+            Start-MessageFilter
             $DteInstace = New-DteInstance -ErrorAction Stop
             $CloseDteInstace = $true
-            Start-MessageFilter
         }
 
         if (!(Test-Path $Path -PathType Leaf)) {
@@ -59,17 +59,22 @@ function Install-TcLibrary {
         }
     
         Write-Host "Successfully installed $Path to $LibRepo"
-    
+
+        Write-Verbose "Cleaning up temporary directory $TmpPath ..."
+        $DteInstace.Solution.Close($false)
+        Remove-Item $TmpPath -Recurse -Force
+        
         trap {
             Write-Error "$_"
             Write-Verbose "Cleaning up temporary directory $TmpPath ..."
             $DteInstace.Solution.Close($false)
+            if ($CloseDteInstace) {
+                $DteInstace.Quit()
+                Stop-MessageFilter
+            }
             Remove-Item $TmpPath -Recurse -Force
+            break;
         }
-    
-        Write-Verbose "Cleaning up temporary directory $TmpPath ..."
-        $DteInstace.Solution.Close($false)
-        Remove-Item $TmpPath -Recurse -Force
     }
 
     end {
