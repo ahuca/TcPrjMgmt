@@ -1,12 +1,12 @@
 function Close-DteInstance {
     [CmdletBinding()]
     param (
-        [Parameter(Mandatory = $true, ValueFromPipeline = $true)]$DteInstace,
+        [Parameter(Mandatory = $true, ValueFromPipeline = $true)]$DteInstance,
         [switch]$DoNotStopMsgFiltering
     )
     
     try {
-        $DteInstace.Quit()
+        $DteInstance.Quit()
         if (!$DoNotStopMsgFiltering) {
             Stop-MessageFilter
         }

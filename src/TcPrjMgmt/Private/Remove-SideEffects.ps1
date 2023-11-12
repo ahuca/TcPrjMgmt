@@ -3,7 +3,7 @@ function Remove-SideEffects {
     param (
         [Parameter(Mandatory = $true)]
         [System.__ComObject]
-        $DteInstace,
+        $DteInstance,
         
         [bool]
         $CloseDteInstance,
@@ -15,10 +15,10 @@ function Remove-SideEffects {
     
     process {
         Write-Verbose "Cleaning up temporary directory $TmpPath ..."
-        $DteInstace.Solution.Close($false)
+        $DteInstance.Solution.Close($false)
         if ($CloseDteInstance) {
             Invoke-CommandWithRetry -ScriptBlock {
-                $DteInstace.Quit()
+                $DteInstance.Quit()
             } -Count 10 -Milliseconds 200
             Stop-MessageFilter
         }

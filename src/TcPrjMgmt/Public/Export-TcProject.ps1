@@ -3,7 +3,7 @@ function Export-TcProject {
     param (
         [Parameter(ValueFromPipeline = $true)]
         [System.__ComObject]
-        $DteInstace,
+        $DteInstance,
 
         [Parameter(Mandatory = $true)]
         [string]
@@ -48,7 +48,7 @@ function Export-TcProject {
     }
 
     begin {
-        $CloseDteInstace = $false
+        $CloseDteInstance = $false
 
         switch ($Format) {
             'Library' {
@@ -65,13 +65,13 @@ function Export-TcProject {
     }
 
     process {
-        if (!$DteInstace) {
+        if (!$DteInstance) {
             Start-MessageFilter
-            $DteInstace = New-DteInstance -ErrorAction Stop
-            $CloseDteInstace = $true
+            $DteInstance = New-DteInstance -ErrorAction Stop
+            $CloseDteInstance = $true
         }
 
-        $sln = $DteInstace.Solution
+        $sln = $DteInstance.Solution
 
         $Solution = Resolve-Path $Solution
 
@@ -144,12 +144,12 @@ function Export-TcProject {
 
         trap {
             Write-Error "$_"
-            Remove-SideEffects -DteInstace $DteInstace -TmpPath $TmpPath -CloseDteInstance $CloseDteInstace
+            Remove-SideEffects -DteInstance $DteInstance -TmpPath $TmpPath -CloseDteInstance $CloseDteInstance
             break
         }
     }
 
     end {
-        Remove-SideEffects -DteInstace $DteInstace -TmpPath $TmpPath -CloseDteInstance $CloseDteInstace
+        Remove-SideEffects -DteInstance $DteInstance -TmpPath $TmpPath -CloseDteInstance $CloseDteInstance
     }
 }

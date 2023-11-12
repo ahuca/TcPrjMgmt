@@ -3,7 +3,7 @@ function Uninstall-TcLibrary {
     param (
         [Parameter(ValueFromPipeline = $true)]
         [System.__ComObject]
-        $DteInstace,
+        $DteInstance,
 
         [Parameter(Mandatory = $true)]
         $LibName,
@@ -22,20 +22,20 @@ function Uninstall-TcLibrary {
     )
 
     begin {
-        $CloseDteInstace = $false
+        $CloseDteInstance = $false
     }
 
     process {
-        if (!$DteInstace) {
+        if (!$DteInstance) {
             Start-MessageFilter
-            $DteInstace = New-DteInstance -ErrorAction Stop
-            $CloseDteInstace = $true
+            $DteInstance = New-DteInstance -ErrorAction Stop
+            $CloseDteInstance = $true
         }
         
-        $dummyPrj = New-DummyTwincatSolution -DteInstace $DteInstace -Path $TmpPath
+        $dummyPrj = New-DummyTwincatSolution -DteInstance $DteInstance -Path $TmpPath
         
         $systemManager = Invoke-CommandWithRetry -ScriptBlock {
-            return $DteInstace.Solution.Projects.Item(1).Object
+            return $DteInstance.Solution.Projects.Item(1).Object
         } -Count 10 -Milliseconds 100 -ErrorAction Stop
 
         Invoke-CommandWithRetry -ScriptBlock {
@@ -52,12 +52,12 @@ function Uninstall-TcLibrary {
 
         trap {
             Write-Error "$_"
-            Remove-SideEffects -DteInstace $DteInstace -TmpPath $TmpPath -CloseDteInstance $CloseDteInstace
+            Remove-SideEffects -DteInstance $DteInstance -TmpPath $TmpPath -CloseDteInstance $CloseDteInstance
             break;
         }
     }
 
     end {
-        Remove-SideEffects -DteInstace $DteInstace -TmpPath $TmpPath -CloseDteInstance $CloseDteInstace
+        Remove-SideEffects -DteInstance $DteInstance -TmpPath $TmpPath -CloseDteInstance $CloseDteInstance
     }
 }

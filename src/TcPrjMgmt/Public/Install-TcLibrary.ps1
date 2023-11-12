@@ -3,7 +3,7 @@ function Install-TcLibrary {
     param (
         [Parameter(ValueFromPipeline = $true)]
         [System.__ComObject]
-        $DteInstace,
+        $DteInstance,
 
         [Parameter(Mandatory = $true)]
         $Path,
@@ -18,24 +18,24 @@ function Install-TcLibrary {
     )
 
     begin {
-        $CloseDteInstace = $false
+        $CloseDteInstance = $false
     }
 
     process {
-        if (!$DteInstace) {
+        if (!$DteInstance) {
             Start-MessageFilter
-            $DteInstace = New-DteInstance -ErrorAction Stop
-            $CloseDteInstace = $true
+            $DteInstance = New-DteInstance -ErrorAction Stop
+            $CloseDteInstance = $true
         }
 
         if (!(Test-Path $Path -PathType Leaf)) {
             throw "Provided library path $Path does not exist"
         }
         
-        $dummyPrj = New-DummyTwincatSolution -DteInstace $DteInstace -Path $TmpPath
+        $dummyPrj = New-DummyTwincatSolution -DteInstance $DteInstance -Path $TmpPath
     
         try {
-            $systemManager = $DteInstace.Solution.Projects.Item(1).Object
+            $systemManager = $DteInstance.Solution.Projects.Item(1).Object
         }
         catch {
             throw "Failed to get the system manager object"
@@ -66,12 +66,12 @@ function Install-TcLibrary {
 
         trap {
             Write-Error "$_"
-            Remove-SideEffects -DteInstace $DteInstace -TmpPath $TmpPath -CloseDteInstance $CloseDteInstace
+            Remove-SideEffects -DteInstance $DteInstance -TmpPath $TmpPath -CloseDteInstance $CloseDteInstance
             break;
         }
     }
 
     end {
-        Remove-SideEffects -DteInstace $DteInstace -TmpPath $TmpPath -CloseDteInstance $CloseDteInstace
+        Remove-SideEffects -DteInstance $DteInstance -TmpPath $TmpPath -CloseDteInstance $CloseDteInstance
     }
 }

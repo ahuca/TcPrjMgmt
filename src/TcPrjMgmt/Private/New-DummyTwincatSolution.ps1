@@ -5,7 +5,7 @@ function New-DummyTwincatSolution {
     param (
         [Parameter(Mandatory = $true, ValueFromPipeline = $true)]
         [System.__ComObject]
-        $DteInstace,
+        $DteInstance,
 
         [Parameter(Mandatory = $true)][string]$Path
     )
@@ -22,7 +22,7 @@ function New-DummyTwincatSolution {
     Write-Verbose "... successful"
 
     $project = Invoke-CommandWithRetry -ScriptBlock {
-        $result = $DteInstace.Solution.AddFromTemplate($tcProjectTemplatePath, $Path, "TmpSolution.tsp")
+        $result = $DteInstance.Solution.AddFromTemplate($tcProjectTemplatePath, $Path, "TmpSolution.tsp")
         
         if (!$result) { throw }
 
