@@ -1,3 +1,14 @@
+## [0.5.0](https://github.com/ahuca/TcPrjMgmt/compare/v0.4.1...v0.5.0) (2023-11-12)
+
+
+### ⚠ BREAKING CHANGES
+
+* the name of the input parameter of `Close-DteInstance`, `Export-TcProject`, `Install-TcLibrary`, and `Uninstall-TcLibrary` is changed
+
+### 🛠 Fixes
+
+* fixed more typos in DTE input parameter of several functions ([f2ab95c](https://github.com/ahuca/TcPrjMgmt/commit/f2ab95c626b9dfd02071fa72dab3316742b3ca18))
+
 ## [0.4.1](https://github.com/ahuca/TcPrjMgmt/compare/v0.4.0...v0.4.1) (2023-11-11)
 
 
