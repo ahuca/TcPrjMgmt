@@ -51,6 +51,6 @@ function New-DteInstance {
         return $dte
     }
 
-    Write-Error "Unable to create a DTE instace"
+    Write-Error "Unable to create a DTE instance"
     return $null
 }
