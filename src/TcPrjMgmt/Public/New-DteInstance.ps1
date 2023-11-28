@@ -9,6 +9,11 @@ function New-DteInstance {
             "VisualStudio.DTE.12.0")]$ForceProgId = $null,
         [switch]$DoNotStartMsgFiltering
     )
+    
+    if (!$DoNotStartMsgFiltering) {
+        Start-MessageFilter
+        $msgFilterStarted = $true
+    }
 
     $dte = $null
     $loadedProgId = ""
@@ -45,12 +50,12 @@ function New-DteInstance {
 
     if ($dte) {
         Write-Verbose "Successfully created $loadedProgId"
-        if (!$DoNotStartMsgFiltering) {
-            Start-MessageFilter
-        }
         return $dte
     }
 
+    if ($msgFilterStarted) {
+        Start-MessageFilter
+    }
     Write-Error "Unable to create a DTE instance"
     return $null
 }
