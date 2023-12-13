@@ -1,3 +1,16 @@
+## [0.5.1](https://github.com/ahuca/TcPrjMgmt/compare/v0.5.0...v0.5.1) (2023-12-13)
+
+
+### :scissors: Refactor
+
+* Changed to using `Path.GetExtension` to support older PowerShell version ([a6c64eb](https://github.com/ahuca/TcPrjMgmt/commit/a6c64ebb0b9de8d07dadf2202e66119beb084966))
+* rearranged message filter position in `New-DteInstance` ([ed8513b](https://github.com/ahuca/TcPrjMgmt/commit/ed8513b5e9c5a2269e084ab6cd73cb6dfe4ccb46))
+
+
+### 🛠 Fixes
+
+* fixed type in error message of `New-DteInstance` ([ac723c4](https://github.com/ahuca/TcPrjMgmt/commit/ac723c4f66cc0d1346e0ef4cc1d8f5f375d710de))
+
 ## [0.5.0](https://github.com/ahuca/TcPrjMgmt/compare/v0.4.1...v0.5.0) (2023-11-12)
 
 
