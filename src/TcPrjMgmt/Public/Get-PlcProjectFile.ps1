@@ -4,7 +4,7 @@ function Assert-FlatProjectFile {
         [Parameter(Mandatory=$true)][string]$Path
     )
 
-    return ((Split-Path $Path -Extension) -eq $PlcProjectExtension)
+    return ([System.IO.Path]::GetExtension($Path) -eq $PlcProjectExtension)
 }
 
 function Get-PlcProjectFile {
