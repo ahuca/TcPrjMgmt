@@ -66,14 +66,11 @@ function Install-TcLibrary {
         
             Write-Host "Successfully installed $Path to $LibRepo"
         }
+        catch {
+            Write-Error $_
+        }
         finally {
             Remove-SideEffects -DteInstance $DteInstance -TmpPath $TmpPath -CloseDteInstance $CloseDteInstance
-        }
-
-        trap {
-            Write-Error "$_"
-            Remove-SideEffects -DteInstance $DteInstance -TmpPath $TmpPath -CloseDteInstance $CloseDteInstance
-            break;
         }
     }
 }
