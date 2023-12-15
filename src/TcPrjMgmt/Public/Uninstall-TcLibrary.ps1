@@ -55,9 +55,9 @@ function Uninstall-TcLibrary {
             Remove-SideEffects -DteInstance $DteInstance -TmpPath $TmpPath -CloseDteInstance $CloseDteInstance
             break;
         }
-    }
-
-    end {
-        Remove-SideEffects -DteInstance $DteInstance -TmpPath $TmpPath -CloseDteInstance $CloseDteInstance
+        
+        finally {
+            Remove-SideEffects -DteInstance $DteInstance -TmpPath $TmpPath -CloseDteInstance $CloseDteInstance
+        }
     }
 }
