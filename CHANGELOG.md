@@ -1,3 +1,10 @@
+## [0.5.2](https://github.com/ahuca/TcPrjMgmt/compare/v0.5.1...v0.5.2) (2023-12-15)
+
+
+### 🛠 Fixes
+
+* Using finally block to clean up DTE instance ([ba04348](https://github.com/ahuca/TcPrjMgmt/commit/ba043485d73b9c42376a08394649be19a17b308d))
+
 ## [0.5.1](https://github.com/ahuca/TcPrjMgmt/compare/v0.5.0...v0.5.1) (2023-12-13)
 
 
