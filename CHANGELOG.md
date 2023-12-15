@@ -1,3 +1,10 @@
+## [0.5.3](https://github.com/ahuca/TcPrjMgmt/compare/v0.5.2...v0.5.3) (2023-12-15)
+
+
+### 🛠 Fixes
+
+* Added missing try block to before finally block ([f862a7d](https://github.com/ahuca/TcPrjMgmt/commit/f862a7d5fbadeb561b99d8d95d18f2fb70f410ea))
+
 ## [0.5.2](https://github.com/ahuca/TcPrjMgmt/compare/v0.5.1...v0.5.2) (2023-12-15)
 
 
